@@ -1,0 +1,30 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Carrera
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Eliminar Carrera";
+}
+
+<div class="container">
+    <h2 class="text-center text-danger">Eliminar Carrera</h2>
+
+    <div class="card bg-light p-4">
+        <h4 class="mb-3">¿Estás seguro de que quieres eliminar esta carrera?</h4>
+
+        <dl class="row">
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Eliminar
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+        </form>
+
+    </div>
+</div>

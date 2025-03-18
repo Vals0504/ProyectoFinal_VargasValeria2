@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Universidad</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/estudiante.css" asp-append-version="true">
+</head>
+
+<body>
+    <!-- 🔹 Barra de navegación -->
+    <header>
+    <nav class="navbar">
+        <span class="logo">Universidad</span>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Sobre nosotros</a></li>
+                <li><a asp-controller="Estudiante" asp-action="Carreras">Carreras</a></li>
+            <li><a href="#">Cursos inscritos</a></li>
+            <li><a href="#">Contactos</a></li>
+        </ul>
+        <a href="#" class="logout">Cerrar sesión</a>
+    </nav>
+    </header>
+    <!-- 🔹 Contenido Principal -->
+    <div class="container">
+        <main role="main" class="content">
+            @RenderBody()  
+        </main>
+    </div>
+
+    <!-- 🔹 Footer -->
+    <footer class="footer">
+        <p>© 2025 - Universidad</p>
+        <div class="social-icons">
+            <i class="bi bi-facebook"></i>
+            <i class="bi bi-instagram"></i>
+            <i class="bi bi-twitter"></i>
+            <i class="bi bi-tiktok"></i>
+        </div>
+        <p><a href="https://www.universidad.com">www.universidad.com</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

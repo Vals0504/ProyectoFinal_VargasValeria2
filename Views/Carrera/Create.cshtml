@@ -1,0 +1,33 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Carrera
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Nueva Carrera";
+}
+
+<link rel="stylesheet" href="~/css/styles.css" />
+
+<div class="container">
+    <!-- Título -->
+    <div class="header-box">
+        <h2 class="text-center">Nueva Carrera</h2>
+    </div>
+
+    <!-- Formulario -->
+    <div class="form-container">
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label asp-for="Nombre">Nombre</label>
+                <input asp-for="Nombre" class="form-control" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-center">
+                <button type="submit" class="btn-save">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <!-- Puedes agregar scripts aquí en caso de ser necesario -->
+}

@@ -1,0 +1,64 @@
+﻿@model List<ProyectoFinal_VargasValeria.Models.Carrera>
+
+@{
+    Layout = "_LayoutEstudiante"; // Asegúrate de tener un layout para estudiantes
+    ViewData["Title"] = "Carreras Disponibles";
+}
+
+<div class="container">
+    <h2 class="text-center">Carreras Disponibles</h2>
+
+    <!-- Barra de Búsqueda -->
+    <div class="d-flex justify-content-between align-items-center search-container mb-3">
+        <form method="get" class="d-flex w-100">
+            <input type="text" name="searchString" class="form-control me-2" placeholder="Seleccione una Carrera" value="@Context.Request.Query["searchString"]">
+            <button type="submit" class="btn btn-secondary">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cursos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    @foreach (var carrera in Model)
+                    {
+                        <tr>
+                            <td>@carrera.Nombre</td>
+                            <td>
+                                @if (carrera.CursosCarreras != null && carrera.CursosCarreras.Any())
+                                {
+                                    <ul class="m-0 p-0">
+                                        @foreach (var curso in carrera.CursosCarreras)
+                                        {
+                                            <li>@curso.Curso.Nombre</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin cursos</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">No hay carreras disponibles.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
