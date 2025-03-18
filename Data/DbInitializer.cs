@@ -20,7 +20,7 @@ namespace ProyectoFinal_VargasValeria.Data
                 }
             }
 
-            // Crear usuario Admin correctamente
+            // Crear usuario Admin correctamente.
             var adminEmail = "admin@email.com";
             var adminPassword = "Admin@123";
 
