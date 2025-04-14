@@ -19,7 +19,7 @@ body {
 }
 
 
-/* 📌 Ícono de menú */
+/*  Ícono de menú */
 .menu-icon {
     font-size: 22px;
     cursor: pointer;
@@ -29,7 +29,7 @@ body {
 }
 
 
-/* 📌 Texto "Universidad" */
+/* Texto "Universidad" */
 .brand {
     font-weight: bold;
     font-size: 18px;
@@ -63,7 +63,7 @@ body {
         padding: 6px 12px;
     }
 
-    /* 🔹 Efecto Hover: Los demás botones se vuelven blancos */
+    /*  Efecto Hover: Los demás botones se vuelven blancos */
     .nav-links a:hover {
         background-color: white;
         color: #3D2B1F;
@@ -122,7 +122,7 @@ admin-image {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
 }
 
-/* 🔹 Footer */
+/* Footer */
 .footer {
     background-color: #D9C3A5;
     padding: 15px 30px;
@@ -135,7 +135,7 @@ admin-image {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-    /* 🔹 Texto en el footer */
+    /*  Texto en el footer */
     .footer p, .footer a {
         margin: 0;
         color: #4C3B2C;
@@ -144,14 +144,14 @@ admin-image {
         text-decoration: none;
     }
 
-    /* 🔹 Íconos Sociales */
+    /*  Íconos Sociales */
     .footer .social-icons {
         display: flex;
-        gap: 15px; /* 📌 Espaciado entre íconos */
+        gap: 15px; /*  Espaciado entre íconos */
     }
 
         .footer .social-icons a {
-            font-size: 1.3rem; /* 📌 Tamaño correcto de íconos */
+            font-size: 1.3rem; /* Tamaño correcto de íconos */
             color: #4C3B2C;
             transition: color 0.3s ease-in-out;
         }

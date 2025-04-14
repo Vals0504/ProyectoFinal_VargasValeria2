@@ -78,13 +78,13 @@ input {
     font-size: 18px;
     border-radius: 8px;
     text-align: center;
-    text-decoration: none; /* Quita el subrayado de los enlaces */
+    text-decoration: none;
     transition: 0.3s;
-    margin-bottom: 10px; /* Agrega margen entre los botones */
+    margin-bottom: 10px;
 }
 
     .btn-custom:last-of-type {
-        margin-bottom: 0; /* El último botón no necesita margen extra */
+        margin-bottom: 0; 
     }
 
     .btn-custom:hover {

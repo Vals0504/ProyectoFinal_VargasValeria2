@@ -24,37 +24,64 @@ namespace ProyectoFinal_VargasValeria.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home"); 
+        }
 
         [HttpPost]
         public async Task<IActionResult> LoginAlumno(string email, string password)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && await _userManager.IsInRoleAsync(user, "User"))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "EstudianteDashboard");
-                }
+                ModelState.AddModelError("", "El correo y la contraseña son obligatorios.");
+                return View("AlumnoLogin");
             }
-            ModelState.AddModelError(string.Empty, "Credenciales incorrectas");
-            return View("AlumnoLogin");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !await _userManager.IsInRoleAsync(user, "User"))
+            {
+                ModelState.AddModelError("", "Correo incorrecto o usuario no autorizado.");
+                return View("AlumnoLogin");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Contraseña incorrecta. Intente de nuevo.");
+                return View("AlumnoLogin");
+            }
+
+            return RedirectToAction("Index", "EstudianteDashboard");
         }
 
         [HttpPost]
         public async Task<IActionResult> LoginAdmin(string email, string password)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
+                ModelState.AddModelError("", "El correo y la contraseña son obligatorios.");
+                return View("AdminLogin");
             }
-            ModelState.AddModelError(string.Empty, "Credenciales incorrectas");
-            return View("AdminLogin");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                ModelState.AddModelError("", "Correo incorrecto o usuario no autorizado.");
+                return View("AdminLogin");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Contraseña incorrecta. Intente de nuevo.");
+                return View("AdminLogin");
+            }
+
+            return RedirectToAction("Index", "Admin");
         }
+
     }
 }

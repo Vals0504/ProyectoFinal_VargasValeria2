@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinal_VargasValeria.Data;
 
@@ -11,9 +12,11 @@ using ProyectoFinal_VargasValeria.Data;
 namespace ProyectoFinal_VargasValeria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250407181536_AddCarreraSedeRelation")]
+    partial class AddCarreraSedeRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,21 +272,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                     b.ToTable("Carreras");
                 });
 
-            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CarreraSede", b =>
-                {
-                    b.Property<int>("CarreraId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SedeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CarreraId", "SedeId");
-
-                    b.HasIndex("SedeId");
-
-                    b.ToTable("CarrerasSedes");
-                });
-
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Curso", b =>
                 {
                     b.Property<int>("Id")
@@ -439,23 +427,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                     b.ToTable("Matriculas");
                 });
 
-            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Sede", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sedes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -505,25 +476,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CarreraSede", b =>
-                {
-                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
-                        .WithMany("CarrerasSedes")
-                        .HasForeignKey("CarreraId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectoFinal_VargasValeria.Models.Sede", "Sede")
-                        .WithMany("CarrerasSedes")
-                        .HasForeignKey("SedeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Carrera");
-
-                    b.Navigation("Sede");
                 });
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CursosCarreras", b =>
@@ -596,8 +548,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Carrera", b =>
                 {
-                    b.Navigation("CarrerasSedes");
-
                     b.Navigation("CursosCarreras");
 
                     b.Navigation("Estudiantes");
@@ -620,11 +570,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Estudiante", b =>
                 {
                     b.Navigation("Matriculas");
-                });
-
-            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Sede", b =>
-                {
-                    b.Navigation("CarrerasSedes");
                 });
 #pragma warning restore 612, 618
         }

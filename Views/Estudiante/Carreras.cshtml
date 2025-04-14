@@ -1,33 +1,42 @@
 ﻿@model List<ProyectoFinal_VargasValeria.Models.Carrera>
 
 @{
-    Layout = "_LayoutEstudiante"; // Asegúrate de tener un layout para estudiantes
+    Layout = "_LayoutEstudiante";
     ViewData["Title"] = "Carreras Disponibles";
 }
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
 
-<div class="container">
+
+<div class="main-container">
     <h2 class="text-center">Carreras Disponibles</h2>
 
-    <!-- Barra de Búsqueda -->
-    <div class="d-flex justify-content-between align-items-center search-container mb-3">
-        <form method="get" class="d-flex w-100">
-            <input type="text" name="searchString" class="form-control me-2" placeholder="Seleccione una Carrera" value="@Context.Request.Query["searchString"]">
-            <button type="submit" class="btn btn-secondary">
-                <i class="bi bi-search"></i>
-            </button>
+    <!-- Barra de Búsqueda con Bootstrap -->
+    
+    <div class="search-container">
+        <form method="get" asp-controller="Estudiante" asp-action="Carreras" class="w-50">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control search-input"
+                       placeholder="Seleccione una Carrera" value="@Context.Request.Query["searchString"]">
+                <button type="submit" class="btn search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="table-responsive mt-4">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark text-center">
+
+
+    <!-- Tabla de Carreras -->
+    <div class="table-container">
+        <table class="styled-table">
+            <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Cursos</th>
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.Count > 0)
+                @if (Model != null && Model.Any())
                 {
                     @foreach (var carrera in Model)
                     {
@@ -36,7 +45,7 @@
                             <td>
                                 @if (carrera.CursosCarreras != null && carrera.CursosCarreras.Any())
                                 {
-                                    <ul class="m-0 p-0">
+                                    <ul class="course-list">
                                         @foreach (var curso in carrera.CursosCarreras)
                                         {
                                             <li>@curso.Curso.Nombre</li>
@@ -62,4 +71,3 @@
     </div>
 </div>
 
-</div>

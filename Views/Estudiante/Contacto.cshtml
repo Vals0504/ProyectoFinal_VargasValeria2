@@ -1,0 +1,43 @@
+﻿
+
+@{
+    Layout = "_LayoutEstudiante";
+    ViewData["Title"] = "Contacto";
+}
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
+<div class="container mt-4">
+    <div class="text-center">
+        <h2 class="fw-bold text-uppercase">Contactanos</h2>
+        <h5 class="text-muted">Servicio al cliente</h5>
+    </div>
+
+    <div class="row mt-4">
+        
+        <div class="col-md-6 text-center">
+            <img src="~/images/contacto.png" alt="Contactanos" class="img-fluid">
+        </div>
+
+        
+        <div class="col-md-6">
+            <form asp-controller="Estudiante" asp-action="EnviarMensaje" method="post" class="p-4 border rounded bg-light">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mensaje</label>
+                    <textarea name="Mensaje" class="form-control" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nombre</label>
+                    <input type="text" name="Nombre" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Apellido</label>
+                    <input type="text" name="Apellido" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" name="Email" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>

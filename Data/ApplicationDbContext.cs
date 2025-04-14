@@ -18,6 +18,9 @@ namespace ProyectoFinal_VargasValeria.Data
         public DbSet<Matricula> Matriculas { get; set; }
         public DbSet<DocenteCursos> DocenteCursos { get; set; }
         public DbSet<CursosCarreras> CursosCarreras { get; set; }
+        public DbSet<Sede> Sedes { get; set; }
+        public DbSet<CarreraSede> CarrerasSedes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +67,20 @@ namespace ProyectoFinal_VargasValeria.Data
                 .HasOne(cc => cc.Carrera)
                 .WithMany(c => c.CursosCarreras)
                 .HasForeignKey(cc => cc.CarreraId);
+
+            modelBuilder.Entity<CarreraSede>()
+                .HasKey(cs => new { cs.CarreraId, cs.SedeId });
+
+            modelBuilder.Entity<CarreraSede>()
+                .HasOne(cs => cs.Carrera)
+                .WithMany(c => c.CarrerasSedes)
+                .HasForeignKey(cs => cs.CarreraId);
+
+            modelBuilder.Entity<CarreraSede>()
+                .HasOne(cs => cs.Sede)
+                .WithMany(s => s.CarrerasSedes)
+                .HasForeignKey(cs => cs.SedeId);
+
         }
     }
 }

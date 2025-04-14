@@ -1,0 +1,18 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Sede
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Crear Sede";
+}
+
+<h2 class="text-center">Crear Nueva Sede</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancelar</a>
+</form>

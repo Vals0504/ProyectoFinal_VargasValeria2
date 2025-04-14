@@ -1,0 +1,23 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Sede
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Eliminar Sede";
+}
+
+<h2 class="text-center text-danger">Eliminar Sede</h2>
+
+<div class="card p-3 bg-light shadow-sm">
+    <h4 class="mb-3">¿Estás seguro que deseas eliminar esta sede?</h4>
+
+    <dl class="row">
+        <dt class="col-sm-2">Nombre:</dt>
+        <dd class="col-sm-10">@Model.Nombre</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

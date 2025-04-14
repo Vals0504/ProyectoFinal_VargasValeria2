@@ -1,0 +1,40 @@
+﻿@model List<ProyectoFinal_VargasValeria.Models.Curso>
+
+@{
+    Layout = "_LayoutEstudiante";
+    ViewData["Title"] = "Cursos Inscritos";
+}
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
+
+<div class="container">
+    <h2 class="text-center fw-bold text-dark-brown">Cursos Inscritos</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-center">
+            <thead class="table-header">
+                <tr>
+                    <th>Curso</th>
+                    <th>Créditos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var curso in Model)
+                    {
+                        <tr>
+                            <td>@curso.Nombre</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="text-muted">No estás inscrito en ningún curso.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

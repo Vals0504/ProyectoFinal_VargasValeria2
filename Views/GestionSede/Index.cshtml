@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ProyectoFinal_VargasValeria.Models.Sede>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Sedes";
+}
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+
+<div class="main-container">
+    <h2 class="text-center">Listado de Sedes</h2>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container d-flex align-items-center justify-content-center mb-3">
+        <form method="get" class="w-50">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control search-input" placeholder="Buscar sede..." value="@Context.Request.Query["searchString"]" />
+                <button type="submit" class="btn search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <a asp-action="Create" class="btn btn-primary btn-circle ms-2">
+            <i class="bi bi-plus-lg"></i>
+        </a>
+    </div>
+
+    <!-- Tabla de Sedes -->
+    <div class="table-container">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">No hay sedes registradas.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+}

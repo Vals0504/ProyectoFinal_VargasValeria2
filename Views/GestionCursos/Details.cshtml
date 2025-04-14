@@ -1,0 +1,37 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Curso
+
+@{
+    ViewData["Title"] = "Detalles del Curso";
+    Layout = "_LayoutAdmin";
+}
+
+<h2>Detalles del Curso</h2>
+
+<div>
+    <h4>@Model.Nombre</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Créditos</dt>
+        <dd class="col-sm-10">@Model.Creditos</dd>
+
+        <dt class="col-sm-2">Carreras Asociadas</dt>
+        <dd class="col-sm-10">
+            @if (Model.CursosCarreras != null && Model.CursosCarreras.Any())
+            {
+                <ul>
+                    @foreach (var cc in Model.CursosCarreras)
+                    {
+                        <li>@cc.Carrera.Nombre</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted">No asociadas</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

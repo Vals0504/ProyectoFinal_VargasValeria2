@@ -1,0 +1,120 @@
+﻿@model List<ProyectoFinal_VargasValeria.Models.Curso>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Gestión de Cursos";
+}
+
+<link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+
+<div class="main-container">
+    <h2 class="text-center">Gestión de Cursos</h2>
+
+    <!-- Barra de Búsqueda -->
+    <div class="search-container d-flex align-items-center justify-content-center">
+        <form method="get" class="w-50">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control search-input" placeholder="Busque un curso" value="@Context.Request.Query["searchString"]">
+                <button type="submit" class="btn search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <a asp-action="Create" class="btn btn-primary btn-circle ms-2">
+            <i class="bi bi-plus-lg"></i>
+        </a>
+    </div>
+
+    <!-- Tabla de Cursos -->
+    <div class="table-container mt-4">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Carreras Asociadas</th>
+                    <th>Sedes</th>
+                    <th>Créditos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var curso in Model)
+                    {
+                        <tr>
+                            <td>@curso.Nombre</td>
+
+                            <!-- Carreras -->
+                            <td>
+                                @if (curso.CursosCarreras?.Any() == true)
+                                {
+                                    <ul class="list-unstyled">
+                                        @foreach (var relacion in curso.CursosCarreras)
+                                        {
+                                            <li>@relacion.Carrera.Nombre</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No asignado</span>
+                                }
+                            </td>
+
+                            <!-- Sedes -->
+                            <td>
+                                @if (curso.CursosCarreras?.Any() == true)
+                                {
+                                    var sedes = curso.CursosCarreras
+                                    .SelectMany(cc => cc.Carrera.CarrerasSedes ?? new List<ProyectoFinal_VargasValeria.Models.CarreraSede>())
+                                    .Select(cs => cs.Sede?.Nombre)
+                                    .Where(nombre => !string.IsNullOrEmpty(nombre))
+                                    .Distinct()
+                                    .ToList();
+
+                                    if (sedes.Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var sede in sedes)
+                                            {
+                                                <li>@sede</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin sede</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No asignado</span>
+                                }
+                            </td>
+
+                            <td>@curso.Creditos</td>
+
+                            <!-- Acciones -->
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@curso.Id" class="btn btn-warning">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@curso.Id" class="btn btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay cursos registrados.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+}

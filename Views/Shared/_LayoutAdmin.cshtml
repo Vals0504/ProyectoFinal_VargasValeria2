@@ -16,13 +16,18 @@
         <nav class="navbar">
             <div class="logo">Universidad</div>
             <ul class="nav-links">
-                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-                <li><a href="@Url.Action("Index", "Carrera")">Carreras</a></li>
-                <li><a href="#">Gestión estudiantes</a></li>
-                <li><a href="#">Cursos</a></li>
-                <li><a href="#">Docentes</a></li>
+                <li><a asp-controller="Admin" asp-action="Index">Home</a></li>
+                <li><a asp-controller="Carrera" asp-action="Index">Carreras</a></li>
+                <li><a asp-controller="GestionSede" asp-action="Index">GestionSede</a></li>
+                <li><a asp-controller="GestionCursos" asp-action="Index">Cursos</a></li>
+				<li><a asp-controller="GestionEstudiante" asp-action="Index">Gestión estudiantes</a></li>
+                <li><a asp-controller="GestionDocente" asp-action="Index">Docentes</a></li>
+                <li>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm logout-btn">Cerrar sesión</button>
+                    </form>
+                </li>
             </ul>
-            <a href="#" class="logout">Cerrar sesión</a>
         </nav>
     </header>
 
@@ -49,6 +54,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    @RenderSection("Scripts", required: false) <!-- 🟢 Esto soluciona el error -->
+    @RenderSection("Scripts", required: false) 
 </body>
 </html>

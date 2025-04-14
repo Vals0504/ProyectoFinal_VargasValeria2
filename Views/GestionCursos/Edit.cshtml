@@ -1,0 +1,53 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Curso
+
+@{
+    ViewData["Title"] = "Editar Curso";
+    Layout = "_LayoutAdmin";
+}
+
+<h2>Editar Curso</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Creditos"></label>
+        <input asp-for="Creditos" class="form-control" />
+        <span asp-validation-for="Creditos" class="text-danger"></span>
+    </div>
+
+    @{
+        var carrerasSeleccionadas = ViewBag.CarrerasSeleccionadas as int[];
+        var carrerasDisponibles = ViewBag.Carreras as List<ProyectoFinal_VargasValeria.Models.Carrera>;
+    }
+
+    <div class="form-group">
+        <label>Carreras Asociadas</label>
+        <div>
+            @foreach (var carrera in carrerasDisponibles)
+            {
+                var isChecked = carrerasSeleccionadas.Contains(carrera.Id);
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="CarreraIds" value="@carrera.Id"
+                           id="carrera_@carrera.Id" @(isChecked ? "checked" : "") />
+                    <label class="form-check-label" for="carrera_@carrera.Id">@carrera.Nombre</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
