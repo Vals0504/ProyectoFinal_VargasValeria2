@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace ProyectoFinal_VargasValeria.Data.Migrations
+namespace ProyectoFinal_VargasValeria.Migrations
 {
     /// <inheritdoc />
-    public partial class InicialCreate : Migration
+    public partial class Carreraarreglo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

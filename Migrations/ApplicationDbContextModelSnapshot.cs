@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinal_VargasValeria.Data;
 
 #nullable disable
 
-namespace ProyectoFinal_VargasValeria.Data.Migrations
+namespace ProyectoFinal_VargasValeria.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250407181536_AddCarreraSedeRelation")]
-    partial class AddCarreraSedeRelation
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,14 +259,24 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Sede")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Carreras");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CarreraSede", b =>
+                {
+                    b.Property<int>("CarreraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SedeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CarreraId", "SedeId");
+
+                    b.HasIndex("SedeId");
+
+                    b.ToTable("CarrerasSedes");
                 });
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Curso", b =>
@@ -366,7 +373,7 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CarreraId")
+                    b.Property<int?>("CarreraId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
@@ -398,6 +405,21 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                     b.ToTable("Estudiantes");
                 });
 
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.EstudianteCarrera", b =>
+                {
+                    b.Property<int>("EstudianteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CarreraId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EstudianteId", "CarreraId");
+
+                    b.HasIndex("CarreraId");
+
+                    b.ToTable("EstudiantesCarreras");
+                });
+
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Matricula", b =>
                 {
                     b.Property<int>("Id")
@@ -425,6 +447,23 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                     b.HasIndex("EstudianteId");
 
                     b.ToTable("Matriculas");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Sede", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sedes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -478,6 +517,25 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CarreraSede", b =>
+                {
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
+                        .WithMany("CarrerasSedes")
+                        .HasForeignKey("CarreraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Sede", "Sede")
+                        .WithMany("CarrerasSedes")
+                        .HasForeignKey("SedeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Carrera");
+
+                    b.Navigation("Sede");
+                });
+
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.CursosCarreras", b =>
                 {
                     b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
@@ -518,13 +576,28 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Estudiante", b =>
                 {
-                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", null)
                         .WithMany("Estudiantes")
+                        .HasForeignKey("CarreraId");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.EstudianteCarrera", b =>
+                {
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
+                        .WithMany("EstudianteCarreras")
                         .HasForeignKey("CarreraId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Estudiante", "Estudiante")
+                        .WithMany("EstudianteCarreras")
+                        .HasForeignKey("EstudianteId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Carrera");
+
+                    b.Navigation("Estudiante");
                 });
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Matricula", b =>
@@ -548,7 +621,11 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Carrera", b =>
                 {
+                    b.Navigation("CarrerasSedes");
+
                     b.Navigation("CursosCarreras");
+
+                    b.Navigation("EstudianteCarreras");
 
                     b.Navigation("Estudiantes");
                 });
@@ -569,7 +646,14 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Estudiante", b =>
                 {
+                    b.Navigation("EstudianteCarreras");
+
                     b.Navigation("Matriculas");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Sede", b =>
+                {
+                    b.Navigation("CarrerasSedes");
                 });
 #pragma warning restore 612, 618
         }

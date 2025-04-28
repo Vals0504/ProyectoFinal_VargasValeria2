@@ -1,22 +1,13 @@
 ﻿@model List<ProyectoFinal_VargasValeria.Models.Curso>
 
 @{
-    Layout = "_LayoutEstudiante";
+    Layout = "_LayoutUser";
     ViewData["Title"] = "Cursos Inscritos";
 }
-
 <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true">
 
 <div class="container">
     <h2 class="text-center fw-bold text-dark-brown">Cursos Inscritos</h2>
-
-    @if (TempData["MensajeMatricula"] != null)
-    {
-        <div class="alert alert-success text-center my-3">
-            @TempData["MensajeMatricula"]
-        </div>
-    }
-
 
     <div class="table-responsive">
         <table class="table table-striped table-hover text-center">
@@ -33,7 +24,6 @@
                     {
                         <tr>
                             <td>@curso.Nombre</td>
-                            <td>@curso.Creditos</td>
                         </tr>
                     }
                 }
@@ -47,3 +37,4 @@
         </table>
     </div>
 </div>
+

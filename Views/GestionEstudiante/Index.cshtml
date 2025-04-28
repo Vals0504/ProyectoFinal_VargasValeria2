@@ -1,5 +1,4 @@
-﻿
-@model List<ProyectoFinal_VargasValeria.Models.Estudiante>
+﻿@model List<ProyectoFinal_VargasValeria.Models.Estudiante>
 
 @{
     Layout = "_LayoutAdmin";
@@ -21,14 +20,14 @@
                 </button>
             </div>
         </form>
-        
-        <a href="#" class="btn btn-primary btn-circle ms-2">
+
+        <a asp-action="Create" class="btn btn-primary btn-circle ms-2">
             <i class="bi bi-plus-lg"></i>
         </a>
     </div>
 
     <!-- Tabla de Estudiantes -->
-    <div class="table-container">
+    <div class="table-container mt-4">
         <table class="styled-table">
             <thead>
                 <tr>
@@ -36,13 +35,13 @@
                     <th>Nombre</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
-                    <th>Fecha de Nacimiento</th>
+                    <th>Fecha Nacimiento</th>
                     <th>Carrera</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null && Model.Count > 0)
+                @if (Model != null && Model.Any())
                 {
                     @foreach (var estudiante in Model)
                     {
@@ -53,18 +52,24 @@
                             <td>@estudiante.Telefono</td>
                             <td>@estudiante.FechaNacimiento.ToString("dd/MM/yyyy")</td>
                             <td>
-                                @if (estudiante.Carrera != null)
+                                @if (estudiante.EstudianteCarreras != null && estudiante.EstudianteCarreras.Any())
                                 {
-                                    @estudiante.Carrera.Nombre
+                                    @foreach (var ec in estudiante.EstudianteCarreras)
+                                    {
+                                        <span>@ec.Carrera.Nombre</span>
+
+                                        <br />
+                                    }
                                 }
                                 else
                                 {
                                     <span class="text-muted">Sin carrera</span>
                                 }
                             </td>
+
                             <td class="text-center">
-                                <a href="#" class="btn btn-warning">Editar</a>
-                                <a href="#" class="btn btn-danger">Eliminar</a>
+                                <a asp-action="Edit" asp-route-id="@estudiante.Id" class="btn btn-warning btn-sm">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@estudiante.Id" class="btn btn-danger btn-sm">Eliminar</a>
                             </td>
                         </tr>
                     }
@@ -81,5 +86,4 @@
 </div>
 
 @section Scripts {
-    
 }

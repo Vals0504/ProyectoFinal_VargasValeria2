@@ -23,29 +23,17 @@ namespace ProyectoFinal_VargasValeria.Models
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
         [DataType(DataType.Date)]
-        [CustomValidation(typeof(Estudiante), "ValidarFechaNacimiento")]
+       
         public DateTime FechaNacimiento { get; set; }
 
         [Required(ErrorMessage = "El número de teléfono es obligatorio")]
         [Phone(ErrorMessage = "El número de teléfono no es válido")]
         public string Telefono { get; set; }
 
-        [Required(ErrorMessage = "La carrera es obligatoria")]
-        public int CarreraId { get; set; }
-
-        [ForeignKey("CarreraId")]
-        public Carrera Carrera { get; set; }
 
         public ICollection<Matricula> Matriculas { get; set; } = new HashSet<Matricula>();
+        public ICollection<EstudianteCarrera> EstudianteCarreras { get; set; } = new HashSet<EstudianteCarrera>();
 
-        // Validación personalizada para la fecha de nacimiento
-        public static ValidationResult ValidarFechaNacimiento(DateTime fechaNacimiento, ValidationContext context)
-        {
-            if (fechaNacimiento > DateTime.Now)
-            {
-                return new ValidationResult("La fecha de nacimiento no puede ser futura");
-            }
-            return ValidationResult.Success;
-        }
+
     }
 }

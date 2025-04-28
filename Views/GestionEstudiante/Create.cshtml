@@ -1,0 +1,61 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Estudiante
+
+@{
+    ViewData["Title"] = "Crear Estudiante";
+    Layout = "_LayoutAdmin";
+}
+
+<h2>Crear Estudiante</h2>
+
+<form asp-action="Create" asp-controller="GestionEstudiante" method="post">
+
+    <div class="form-group">
+        <label asp-for="Identificacion"></label>
+        <input asp-for="Identificacion" class="form-control" />
+        <span asp-validation-for="Identificacion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Correo"></label>
+        <input asp-for="Correo" class="form-control" />
+        <span asp-validation-for="Correo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaNacimiento"></label>
+        <input asp-for="FechaNacimiento" class="form-control" type="date" />
+        <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Telefono"></label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Carreras Asociadas</label>
+        <div>
+            @foreach (var carrera in ViewBag.Carreras as List<ProyectoFinal_VargasValeria.Models.Carrera>)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="CarreraIds" value="@carrera.Id" id="carrera_@carrera.Id" />
+                    <label class="form-check-label" for="carrera_@carrera.Id">@carrera.Nombre</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    
+}

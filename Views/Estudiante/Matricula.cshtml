@@ -1,0 +1,48 @@
+﻿@model List<ProyectoFinal_VargasValeria.Models.Curso>
+
+@{
+    Layout = "_LayoutEstudiante";
+    ViewData["Title"] = "Realizar Matrícula";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Realizar Matrícula</h2>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <form asp-action="RealizarMatricula" method="post">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center">Seleccionar</th>
+                        <th>Curso</th>
+                        <th>Créditos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var curso in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <input type="checkbox" name="CursoIds" value="@curso.Id" />
+                            </td>
+                            <td>@curso.Nombre</td>
+                            <td>@curso.Creditos</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Matricular Seleccionados</button>
+                <a asp-action="Index" asp-controller="EstudianteDashboard" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">
+            No hay cursos disponibles para su carrera.
+        </div>
+    }
+</div>

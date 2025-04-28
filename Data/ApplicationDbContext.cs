@@ -9,6 +9,7 @@ namespace ProyectoFinal_VargasValeria.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
+        public ApplicationDbContext() { }
         // Entidades personalizadas
         public DbSet<Estudiante> Estudiantes { get; set; }
         public DbSet<Docente> Docentes { get; set; }
@@ -20,6 +21,7 @@ namespace ProyectoFinal_VargasValeria.Data
         public DbSet<CursosCarreras> CursosCarreras { get; set; }
         public DbSet<Sede> Sedes { get; set; }
         public DbSet<CarreraSede> CarrerasSedes { get; set; }
+        public DbSet<EstudianteCarrera> EstudiantesCarreras { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,6 +82,22 @@ namespace ProyectoFinal_VargasValeria.Data
                 .HasOne(cs => cs.Sede)
                 .WithMany(s => s.CarrerasSedes)
                 .HasForeignKey(cs => cs.SedeId);
+            // Relación muchos a muchos Estudiante-Carreras
+            modelBuilder.Entity<EstudianteCarrera>()
+                .HasKey(ec => new { ec.EstudianteId, ec.CarreraId });
+
+            modelBuilder.Entity<EstudianteCarrera>()
+                .HasOne(ec => ec.Estudiante)
+                .WithMany(e => e.EstudianteCarreras)
+                .HasForeignKey(ec => ec.EstudianteId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<EstudianteCarrera>()
+                .HasOne(ec => ec.Carrera)
+                .WithMany(c => c.EstudianteCarreras)
+                .HasForeignKey(ec => ec.CarreraId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
 
         }
     }

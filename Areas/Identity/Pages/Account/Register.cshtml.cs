@@ -97,7 +97,7 @@ namespace ProyectoFinal_VargasValeria.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("Nuevo usuario registrado.");
 
-                    // 📌 Verificar si el rol "User" existe, si no, lo crea
+                    //  Verificar si el rol "User" existe, si no, lo crea
                     if (!await _roleManager.RoleExistsAsync("User"))
                     {
                         await _roleManager.CreateAsync(new IdentityRole("User"));

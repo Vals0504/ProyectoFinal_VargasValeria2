@@ -14,6 +14,7 @@ namespace ProyectoFinal_VargasValeria.Models
         public ICollection<CursosCarreras> CursosCarreras { get; set; } = new List<CursosCarreras>();
         public ICollection<Estudiante> Estudiantes { get; set; } = new HashSet<Estudiante>();
         public ICollection<CarreraSede> CarrerasSedes { get; set; } = new List<CarreraSede>();
+        public ICollection<EstudianteCarrera> EstudianteCarreras { get; set; } = new HashSet<EstudianteCarrera>();
 
     }
 }

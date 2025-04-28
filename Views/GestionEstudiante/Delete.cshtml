@@ -1,0 +1,60 @@
+﻿@model ProyectoFinal_VargasValeria.Models.Estudiante
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Eliminar Estudiante";
+}
+
+<div class="container">
+    <div class="card p-4 shadow-sm bg-light rounded">
+        <h2 class="text-center text-danger text-uppercase mb-4">Eliminar Estudiante</h2>
+
+        <div class="alert alert-warning text-center">
+            ¿Estás seguro de que deseas eliminar este estudiante?
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-3">Identificación:</dt>
+            <dd class="col-sm-9">@Model.Identificacion</dd>
+
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Correo:</dt>
+            <dd class="col-sm-9">@Model.Correo</dd>
+
+            <dt class="col-sm-3">Teléfono:</dt>
+            <dd class="col-sm-9">@Model.Telefono</dd>
+
+            <dt class="col-sm-3">Fecha de Nacimiento:</dt>
+            <dd class="col-sm-9">@Model.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">Carreras:</dt>
+            <dd class="col-sm-9">
+                @if (Model.EstudianteCarreras != null && Model.EstudianteCarreras.Any())
+                {
+                    @foreach (var ec in Model.EstudianteCarreras)
+                    {
+                        <span>@ec.Carrera.Nombre</span>
+
+                        <br />
+                    }
+                }
+                else
+                {
+                    <span class="text-muted">Sin carrera</span>
+                }
+            </dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="text-end mt-4">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

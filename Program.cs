@@ -63,6 +63,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 // Configurar rutas
 app.MapControllerRoute(
     name: "default",

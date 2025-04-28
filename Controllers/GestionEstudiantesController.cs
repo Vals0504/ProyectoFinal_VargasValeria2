@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ProyectoFinal_VargasValeria.Data;
 using ProyectoFinal_VargasValeria.Models;
 using System.Linq;
@@ -11,16 +11,21 @@ namespace ProyectoFinal_VargasValeria.Controllers
     public class GestionEstudianteController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public GestionEstudianteController(ApplicationDbContext context)
+        public GestionEstudianteController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // LISTAR Y BUSCAR ESTUDIANTES
         public async Task<IActionResult> Index(string searchString)
         {
-            var estudiantes = _context.Estudiantes.Include(e => e.Carrera).AsQueryable();
+            var estudiantes = _context.Estudiantes
+                .Include(e => e.EstudianteCarreras)
+                    .ThenInclude(ec => ec.Carrera)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -33,18 +38,14 @@ namespace ProyectoFinal_VargasValeria.Controllers
         // DETALLES DEL ESTUDIANTE
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var estudiante = await _context.Estudiantes
-                                           .Include(e => e.Carrera)
-                                           .FirstOrDefaultAsync(m => m.Id == id);
-            if (estudiante == null)
-            {
-                return NotFound();
-            }
+                .Include(e => e.EstudianteCarreras)
+                    .ThenInclude(ec => ec.Carrera)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (estudiante == null) return NotFound();
 
             return View(estudiante);
         }
@@ -52,53 +53,83 @@ namespace ProyectoFinal_VargasValeria.Controllers
         // CREAR ESTUDIANTE (GET)
         public IActionResult Create()
         {
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre");
+            ViewBag.Carreras = _context.Carreras.ToList();
             return View();
         }
 
         // CREAR ESTUDIANTE (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Identificacion,Nombre,Correo,FechaNacimiento,Telefono,CarreraId")] Estudiante estudiante)
+        public async Task<IActionResult> Create([Bind("Id,Identificacion,Nombre,Correo,FechaNacimiento,Telefono")] Estudiante estudiante, int[] CarreraIds)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(estudiante);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Crear usuario Identity
+                var user = new IdentityUser
+                {
+                    UserName = estudiante.Correo,
+                    Email = estudiante.Correo,
+                    EmailConfirmed = true
+                };
+
+                var result = await _userManager.CreateAsync(user, "Estudiante123!");
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "Estudiante");
+
+                    // Guardar estudiante en base de datos
+                    _context.Estudiantes.Add(estudiante);
+                    await _context.SaveChangesAsync();
+
+                    foreach (var carreraId in CarreraIds)
+                    {
+                        _context.EstudiantesCarreras.Add(new EstudianteCarrera
+                        {
+                            EstudianteId = estudiante.Id,
+                            CarreraId = carreraId
+                        });
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
 
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            ViewBag.Carreras = _context.Carreras.ToList();
             return View(estudiante);
         }
 
         // EDITAR ESTUDIANTE (GET)
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var estudiante = await _context.Estudiantes.FindAsync(id);
-            if (estudiante == null)
-            {
-                return NotFound();
-            }
+            var estudiante = await _context.Estudiantes
+                .Include(e => e.EstudianteCarreras)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            if (estudiante == null) return NotFound();
+
+            ViewBag.Carreras = _context.Carreras.ToList();
+            ViewBag.CarrerasSeleccionadas = estudiante.EstudianteCarreras.Select(ec => ec.CarreraId).ToArray();
+
             return View(estudiante);
         }
 
         // EDITAR ESTUDIANTE (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Identificacion,Nombre,Correo,FechaNacimiento,Telefono,CarreraId")] Estudiante estudiante)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Identificacion,Nombre,Correo,FechaNacimiento,Telefono")] Estudiante estudiante, int[] CarreraIds)
         {
-            if (id != estudiante.Id)
-            {
-                return NotFound();
-            }
+            if (id != estudiante.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -106,40 +137,48 @@ namespace ProyectoFinal_VargasValeria.Controllers
                 {
                     _context.Update(estudiante);
                     await _context.SaveChangesAsync();
+
+                    // Eliminar carreras actuales
+                    var carrerasActuales = _context.EstudiantesCarreras.Where(ec => ec.EstudianteId == id);
+                    _context.EstudiantesCarreras.RemoveRange(carrerasActuales);
+                    await _context.SaveChangesAsync();
+
+                    // Insertar nuevas carreras
+                    foreach (var carreraId in CarreraIds)
+                    {
+                        _context.EstudiantesCarreras.Add(new EstudianteCarrera
+                        {
+                            EstudianteId = id,
+                            CarreraId = carreraId
+                        });
+                    }
+
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Estudiantes.Any(e => e.Id == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!_context.Estudiantes.Any(e => e.Id == id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CarreraId"] = new SelectList(_context.Carreras, "Id", "Nombre", estudiante.CarreraId);
+            ViewBag.Carreras = _context.Carreras.ToList();
             return View(estudiante);
         }
 
         // ELIMINAR ESTUDIANTE (GET)
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var estudiante = await _context.Estudiantes
-                                           .Include(e => e.Carrera)
-                                           .FirstOrDefaultAsync(m => m.Id == id);
-            if (estudiante == null)
-            {
-                return NotFound();
-            }
+                .Include(e => e.EstudianteCarreras)
+                    .ThenInclude(ec => ec.Carrera)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (estudiante == null) return NotFound();
+
             return View(estudiante);
         }
 
@@ -148,12 +187,17 @@ namespace ProyectoFinal_VargasValeria.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var estudiante = await _context.Estudiantes.FindAsync(id);
+            var estudiante = await _context.Estudiantes
+                .Include(e => e.EstudianteCarreras)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
             if (estudiante != null)
             {
+                _context.EstudiantesCarreras.RemoveRange(estudiante.EstudianteCarreras);
                 _context.Estudiantes.Remove(estudiante);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -24,11 +24,12 @@ namespace ProyectoFinal_VargasValeria.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -41,7 +42,7 @@ namespace ProyectoFinal_VargasValeria.Controllers
             }
 
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null || !await _userManager.IsInRoleAsync(user, "User"))
+            if (user == null || !await _userManager.IsInRoleAsync(user, "Estudiante"))
             {
                 ModelState.AddModelError("", "Correo incorrecto o usuario no autorizado.");
                 return View("AlumnoLogin");
@@ -82,6 +83,5 @@ namespace ProyectoFinal_VargasValeria.Controllers
 
             return RedirectToAction("Index", "Admin");
         }
-
     }
 }

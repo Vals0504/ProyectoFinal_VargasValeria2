@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProyectoFinal_VargasValeria.Controllers
 {
-    [Authorize(Roles = "Estudiante")]
-    public class EstudianteDashboardController : Controller
+    [Authorize(Roles = "User")]
+    public class UserDashboardController : Controller
     {
         public IActionResult Index()
         {

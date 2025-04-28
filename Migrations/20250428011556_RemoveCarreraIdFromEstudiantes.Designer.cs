@@ -9,11 +9,11 @@ using ProyectoFinal_VargasValeria.Data;
 
 #nullable disable
 
-namespace ProyectoFinal_VargasValeria.Data.Migrations
+namespace ProyectoFinal_VargasValeria.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250407183351_RemoveSedeColumnFromCarrera")]
-    partial class RemoveSedeColumnFromCarrera
+    [Migration("20250428011556_RemoveCarreraIdFromEstudiantes")]
+    partial class RemoveCarreraIdFromEstudiantes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -262,11 +262,6 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Sede")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Carreras");
@@ -381,7 +376,7 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CarreraId")
+                    b.Property<int?>("CarreraId")
                         .HasColumnType("int");
 
                     b.Property<string>("Correo")
@@ -411,6 +406,21 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
                     b.HasIndex("CarreraId");
 
                     b.ToTable("Estudiantes");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.EstudianteCarrera", b =>
+                {
+                    b.Property<int>("EstudianteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CarreraId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EstudianteId", "CarreraId");
+
+                    b.HasIndex("CarreraId");
+
+                    b.ToTable("EstudiantesCarreras");
                 });
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Matricula", b =>
@@ -569,13 +579,28 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Estudiante", b =>
                 {
-                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", null)
                         .WithMany("Estudiantes")
+                        .HasForeignKey("CarreraId");
+                });
+
+            modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.EstudianteCarrera", b =>
+                {
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Carrera", "Carrera")
+                        .WithMany("EstudianteCarreras")
                         .HasForeignKey("CarreraId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProyectoFinal_VargasValeria.Models.Estudiante", "Estudiante")
+                        .WithMany("EstudianteCarreras")
+                        .HasForeignKey("EstudianteId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Carrera");
+
+                    b.Navigation("Estudiante");
                 });
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Matricula", b =>
@@ -603,6 +628,8 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
                     b.Navigation("CursosCarreras");
 
+                    b.Navigation("EstudianteCarreras");
+
                     b.Navigation("Estudiantes");
                 });
 
@@ -622,6 +649,8 @@ namespace ProyectoFinal_VargasValeria.Data.Migrations
 
             modelBuilder.Entity("ProyectoFinal_VargasValeria.Models.Estudiante", b =>
                 {
+                    b.Navigation("EstudianteCarreras");
+
                     b.Navigation("Matriculas");
                 });
 
